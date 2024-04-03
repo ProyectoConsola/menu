@@ -1,0 +1,4 @@
+CompileFlags:
+  Add: [--gcc-toolchain=/home/auriel/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20230928/xtensa-esp-elf/,--target=xtensa-esp32, -mlong-calls, -isysroot=/home/auriel/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20230928/xtensa-esp-elf/]
+  Remove: [-fno-tree-switch-conversion, -mtext-section-literals, -mlongcalls, -fstrict-volatile-bitfields]
+
