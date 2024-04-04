@@ -52,6 +52,7 @@ private:
     };
     Bitmap space_invaders_bmp, pong_bmp, bicycle_bmp, selection_arrow_bmp;
     Sprite sprites[4];
+    int selectedGame = 0;
 
 
 public:
@@ -86,7 +87,41 @@ public:
         canvas.drawText(16, 76, "Bicicleta");
     }
 
-    void update(int updateCount) { }
+    void update(int updateCount) 
+    {
+        if ((updateCount % 5) == 0){
+            //Serial.println(selectedGame);
+            if (Ps3.data.button.down || Ps3.data.button.up){
+                if (Ps3.data.button.down && selectedGame != 2){
+                    sprites[3].y += 20;
+                    selectedGame++;
+                }
+                else if (Ps3.data.button.up && selectedGame != 0){
+                    sprites[3].y -= 20;
+                    selectedGame--;
+                }
+            }
+            if (Ps3.data.button.cross){
+                switch (selectedGame)
+                {
+                case 0:
+                    Serial.println("Selected Space Invaders");
+                    break;
+                case 1:
+                    Serial.println("Selected Pong!");
+                    break;
+                case 2:
+                    Serial.println("Selected Bicicleta");
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+        //Serial.println(selectedGame);
+        //Serial.println(updateCount);
+        DisplayController.refreshSprites();
+    }
 
     void collisionDetected(Sprite * spriteA, Sprite * spriteB, Point collisionPoint) { }
 };
