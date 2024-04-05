@@ -11,6 +11,22 @@ fabgl::Canvas        canvas(&DisplayController);
 fabgl::PS2Controller PS2Controller;
 SoundGenerator       soundGenerator;
 
+struct Vec2 {
+    uint16_t x;
+    uint16_t y;
+};
+
+constexpr uint8_t GAMES_NUMBER = 3;
+constexpr uint64_t INPUT_DELAY = 200;
+constexpr uint16_t SELECT_ARROW_STEP = 20;
+constexpr Vec2 SELECT_ARROW_START_POS { 1, 35 };
+
+/*
+ * Información que debería ir en clase juego.
+ */
+uint64_t lastInputRecieved;
+uint64_t currentTime;
+
 namespace Menu {
 
 /*
@@ -89,19 +105,18 @@ public:
 
     void update(int updateCount) 
     {
-        if ((updateCount % 5) == 0){
-            //Serial.println(selectedGame);
-            if (Ps3.data.button.down || Ps3.data.button.up){
-                if (Ps3.data.button.down && selectedGame != 2){
-                    sprites[3].y += 20;
-                    selectedGame++;
-                }
-                else if (Ps3.data.button.up && selectedGame != 0){
-                    sprites[3].y -= 20;
-                    selectedGame--;
-                }
+        currentTime = millis();
+        if ((currentTime - lastInputRecieved) > INPUT_DELAY){
+            lastInputRecieved = currentTime;
+            if (Ps3.data.button.down){
+                selectedGame = (selectedGame + 1) % GAMES_NUMBER;
+                sprites[3].y = SELECT_ARROW_START_POS.y + selectedGame * SELECT_ARROW_STEP;
             }
-            if (Ps3.data.button.cross){
+            else if (Ps3.data.button.up){
+                selectedGame = (selectedGame != 0)? selectedGame - 1: GAMES_NUMBER - 1;
+                sprites[3].y = SELECT_ARROW_START_POS.y + selectedGame * SELECT_ARROW_STEP;
+            }
+            else if (Ps3.data.button.cross) {
                 switch (selectedGame)
                 {
                 case 0:
@@ -118,8 +133,6 @@ public:
                 }
             }
         }
-        //Serial.println(selectedGame);
-        //Serial.println(updateCount);
         DisplayController.refreshSprites();
     }
 
