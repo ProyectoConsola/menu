@@ -61,7 +61,7 @@ private:
     };
     Bitmap space_invaders_bmp, pong_bmp, bicycle_bmp, selection_arrow_bmp;
     Sprite sprites[4];
-
+    int starting_ = 0;
 
 public:
     MainScene():
@@ -85,6 +85,7 @@ public:
 
     void init()
     {
+        Serial.println("MenuScene initiated");
         canvas.selectFont(&fabgl::FONT_8x13);
         canvas.setPenColor(255, 255, 255);
         canvas.setBrushColor(255, 0, 0);
@@ -97,6 +98,18 @@ public:
 
     void update(int updateCount) 
     {
+        /*if(starting_){
+            if(starting_ > 50){
+                stop();
+            }
+            ++starting_;
+            canvas.setBrushColor(Color::Black);
+            sprites[0].visible=false;
+            sprites[1].visible=false;
+            sprites[2].visible=false;
+            sprites[3].visible=false;
+            canvas.scroll(0, -5);
+        }*/
         static uint8_t currentSelection = 0;
         static bool downPressed = false, upPressed = false, crossPressed = false;
         currentTime = millis();
@@ -117,12 +130,12 @@ public:
                 State::display.refreshSprites();
             }
             else if (crossPressed) {
+                starting_++;
                 switch (currentSelection)
                 {
                 case 0:
                     selectedGame = State::Game::SPACE_INVADERS;
                     Serial.println("Space Invaders seleccionado");
-                    stop();
                     break;
                 case 1:
                     selectedGame = State::Game::PONG;
@@ -132,7 +145,6 @@ public:
                 case 2:
                     selectedGame = State::Game::BICYCLE;
                     Serial.println("Selected Bicicleta");
-                    stop();
                     break;
                 default:
                     Serial.println("Selección no válida");

@@ -6,6 +6,7 @@
 #include "menu.hpp"
 #include "pong.hpp"
 #include "spaceInvaders.hpp"
+#include "bycicle.hpp"
 
 void setup()
 {
@@ -15,9 +16,12 @@ void setup()
 
 void loop()
 {
-    State::Game selected = menu::execute();
-    Serial.println("IDK");
     bool isGameSelected = false;
+    State::Game selected;
+    if(!isGameSelected){
+        selected = menu::execute();
+    }
+    Serial.println("IDK");
     switch(selected){
         case State::Game::SPACE_INVADERS:
             isGameSelected = true;
@@ -29,7 +33,7 @@ void loop()
             break;
         case State::Game::BICYCLE:
             isGameSelected = true;
-            //bycicle::execute();
+            bycicle::execute();
             break;
         default:
             break;

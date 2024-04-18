@@ -1,4 +1,5 @@
 #ifndef PONG_HPP
+#define PONG_HPP
 
 namespace pong {
 
