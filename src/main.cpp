@@ -4,7 +4,8 @@
 #include "state.hpp"
 
 #include "menu.hpp"
-#include "games.hpp"
+#include "pong.hpp"
+#include "spaceInvaders.hpp"
 
 void setup()
 {

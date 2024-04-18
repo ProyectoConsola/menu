@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SOUNDS_H
+#define SOUNDS_H
 
 
 const int8_t invadersSoundSamples_1[] = {
@@ -31782,3 +31783,5 @@ const int8_t themeSoundSamples[] = {
       0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
       0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 };
+
+#endif
