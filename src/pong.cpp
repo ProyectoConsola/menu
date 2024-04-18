@@ -3,6 +3,7 @@
 #include "fabutils.h"
 #include <Ps3Controller.h>
 #include <string.h>
+#include <sys/_stdint.h>
 #include "state.hpp"
 
 const uint8_t paddle_data[] = {
@@ -33,14 +34,33 @@ Bitmap bmpBall_2 = Bitmap(4, 4, &ball_data[0], PixelFormat::Mask, RGB888(85, 85,
 
 using fabgl::iclamp;
 
+
+enum class Axis {
+  X_AXIS,
+  Y_AXIS
+};
+
 /*
- * Obtiene la posición correcta para un texto centrado en el eje X.
+ * Obtiene la posición correcta en el eje dado para un texto de cierto tamaño.
+ * Se recibe un valor entre el 0 y el 1 indicando la posición deseada para el
+ * objeto en pantalla.
+ * El centro del texto resultará "posicionado" en el valor indicado por ratio.
  */
-int
-centerAxisX(Canvas &canvas, const uint8_t length)
+int32_t
+posFromPercent(Canvas &cv, Axis ax, const float ratio,
+                   const uint8_t textLenght)
 {
-  return (State::display.getViewPortWidth()) -
-         length * canvas.getFontInfo()->width;
+  uint32_t exactPos;
+  if (ax == Axis::X_AXIS) {
+    exactPos = State::display.getViewPortWidth() * ratio;
+  }
+  else if (ax == Axis::Y_AXIS) {
+    exactPos = State::display.getViewPortHeight() * ratio;
+  }
+  auto fontInfo = cv.getFontInfo();
+  Serial.printf("Peso %d, Banderas %d\n", fontInfo->weight, fontInfo->flags);
+  uint32_t offset = (fontInfo->width*textLenght)/2;
+  return exactPos - offset;
 }
 
 //fabgl::VGAController State::display;
@@ -75,14 +95,15 @@ struct PongIntroScene : public Scene
     gameCanvas2.selectFont(&fabgl::FONT_10x20);
     gameCanvas2.setPenColor(217, 245, 255);
     gameCanvas2.setGlyphOptions(GlyphOptions().DoubleWidth(1));
-    gameCanvas2.drawText(centerAxisX(gameCanvas2, 4), 20, "PONG");
-
-    gameCanvas2.selectFont(&fabgl::FONT_8x8);
+    gameCanvas2.drawText(posFromPercent(gameCanvas2, Axis::X_AXIS, 0.45, 4), 20,
+                         "PONG");
     gameCanvas2.setGlyphOptions(GlyphOptions().DoubleWidth(0));
+    gameCanvas2.selectFont(&fabgl::FONT_8x8);
     gameCanvas2.setPenColor(224, 158, 16);
-    gameCanvas2.drawText(centerAxisX(gameCanvas2, 17), 65, "con ESP32 por FIE");
-    gameCanvas2.drawText(centerAxisX(gameCanvas2, 33), 80,
-                        "Facultad de Ingenieria Electrica.");
+    gameCanvas2.drawText(posFromPercent(gameCanvas2, Axis::X_AXIS, 0.5, 17), 65,
+                         "con ESP32 por FIE");
+    gameCanvas2.drawText(posFromPercent(gameCanvas2, Axis::X_AXIS, 0.5, 33), 80,
+                         "Facultad de Ingenieria Electrica.");
 
     gameCanvas2.drawBitmap(PADDLE1_START_X, PADDLE_START_Y - 20, &bmpPaddle);
     gameCanvas2.drawBitmap(PADDLE2_START_X, PADDLE_START_Y + 15, &bmpPaddle);
@@ -115,8 +136,8 @@ struct PongIntroScene : public Scene
       if (updateCount % 20 == 0)
       {
         gameCanvas2.setPenColor(255, random(255), random(255));
-        gameCanvas2.drawText(centerAxisX(gameCanvas2, 27), 100,
-                            "Presiona [START] para jugar");
+        gameCanvas2.drawText(posFromPercent(gameCanvas2, Axis::X_AXIS, 0.5, 27),
+                             100, "Presiona [START] para jugar");
       }
 
       if (updateCount > 50)
