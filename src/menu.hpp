@@ -3,7 +3,7 @@
 
 namespace menu {
 
-void execute();
+State::Game execute();
 
 }
 

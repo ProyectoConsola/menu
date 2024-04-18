@@ -4,6 +4,7 @@
 #include "state.hpp"
 
 #include "menu.hpp"
+#include "games.hpp"
 
 void setup()
 {
@@ -13,6 +14,23 @@ void setup()
 
 void loop()
 {
-    menu::execute();
-    /* Se realiza la ejecución del juego seleccionado. */
+    State::Game selected = menu::execute();
+    Serial.println("IDK");
+    bool isGameSelected = false;
+    switch(selected){
+        case State::Game::SPACE_INVADERS:
+            isGameSelected = true;
+            spaceInvaders::execute();
+            break;
+        case State::Game::PONG:
+            isGameSelected = true;
+            pong::execute();
+            break;
+        case State::Game::BICYCLE:
+            isGameSelected = true;
+            //bycicle::execute();
+            break;
+        default:
+            break;
+    }
 }

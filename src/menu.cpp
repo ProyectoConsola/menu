@@ -103,7 +103,7 @@ public:
         if ((currentTime - lastInputRecieved) > INPUT_DELAY) {
             downPressed = Ps3.data.button.down;
             upPressed = Ps3.data.button.up;
-            crossPressed = Ps3.data.button.cross;
+            crossPressed = Ps3.data.button.circle;
 
             lastInputRecieved = currentTime;
             if (downPressed || upPressed) {
@@ -122,14 +122,17 @@ public:
                 case 0:
                     selectedGame = State::Game::SPACE_INVADERS;
                     Serial.println("Space Invaders seleccionado");
+                    stop();
                     break;
                 case 1:
                     selectedGame = State::Game::PONG;
                     Serial.println("Selected Pong!");
+                    stop();
                     break;
                 case 2:
                     selectedGame = State::Game::BICYCLE;
                     Serial.println("Selected Bicicleta");
+                    stop();
                     break;
                 default:
                     Serial.println("Selección no válida");

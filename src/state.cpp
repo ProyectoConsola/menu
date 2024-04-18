@@ -4,7 +4,8 @@
 #include "Ps3Controller.h"
 
 namespace State {
-constexpr char PS3_HOST_ADDRESS[] = "78:dd:08:4d:94:a4";
+//constexpr char PS3_HOST_ADDRESS[] = "78:dd:08:4d:94:a4";
+constexpr char PS3_HOST_ADDRESS[] = "24:6f:28:af:1c:66";
 constexpr char VGA_RES[] = VGA_320x200_75Hz;
 constexpr uint32_t TIME_LIMIT = 90000;
 
@@ -12,6 +13,7 @@ constexpr uint32_t TIME_LIMIT = 90000;
  * Controlador de video que será usado en todos los juegos.
  */
 fabgl::VGAController display;
+fabgl::SoundGenerator sound;
 
 /*
  * Realiza inicializaciones necesarias para poder ejecutar juegos dentro del
